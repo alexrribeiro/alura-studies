@@ -19,6 +19,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "downlevelIteration": true, // Inserido para tratar o array de caracteres dos minutos que vão para o relógio
     "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
   "include": [
