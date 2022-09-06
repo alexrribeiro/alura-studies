@@ -6,17 +6,28 @@ import { ITarefa } from '../../types/tarefa';
 import { useEffect, useState } from 'react';
 
 interface Props {
-    selecionado: ITarefa | undefined;
+    selecionado: ITarefa | undefined,
+    finalizarTarefa: () => void
 }
 
-export default function Cronometro({ selecionado }: Props) {
+export default function Cronometro({ selecionado, finalizarTarefa }: Props) {
     const [tempo, setTempo] = useState<number>();
 
     useEffect(() => {
         if (selecionado?.tempo) {
             setTempo(tempoParaSegundos(selecionado.tempo))
         }
-    },[selecionado])
+    },[selecionado]);
+
+    function regressiva(contador: number = 0) { // se undefined será 0, sendo assim sempre number
+        setTimeout(() => {
+            if (contador > 0) {
+                setTempo(contador - 1);
+                return regressiva(contador - 1); // Função recursiva para executar novamente, decrementando até o valor chegar a 0
+            }
+            finalizarTarefa();
+        }, 1000) // A cada 1000 milissegundos (1s) será executado o setTimeout
+    }
 
     return (
         <div className={style.cronometro}>
@@ -24,7 +35,7 @@ export default function Cronometro({ selecionado }: Props) {
             <div className={style.relogioWrapper}>
                 <Relogio tempo={tempo} />
             </div>
-            <Botao>
+            <Botao onClick={() => regressiva(tempo)}>
                 Começar!
             </Botao>
         </div>
